@@ -1,13 +1,10 @@
 class Exercise5_13{
 	
-	int fact (int x){
-		
-		return 4;
-	}
-	
 	public static void main (String [] args){
-		Exercise5_13 ex = new Exercise5_13();
 		
-		int x = ex.fact(6);
+		for (int i=1;i<=20;i++){
+			int fact = i*(i-1);
+			System.out.println (i+"! = "+ fact);
+		}
 	}
 }
