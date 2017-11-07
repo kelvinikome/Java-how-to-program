@@ -1,13 +1,18 @@
+import java.util.Scanner;
+import java.io.*;
+
 class HeartRates{
 	
-	String firstName;
-	String lastName;
-	int day, month, year;
+	private String firstName;
+	private String lastName;
+	private int day, month, year;
 	
-	HeartRates (String fName, String lName, double sal){
+	HeartRates (String fName, String lName, int d, int m, int y){
 		firstName = fName;
 		lastName = lName;
-		salary = sal;
+		day = d;
+		month = m;
+		year = y;
 	}
 	
 	String getFirstName(){
@@ -26,28 +31,73 @@ class HeartRates{
 		lastName = str;
 	}
 	
-	double getSalary(){
-		return salary;
+	int getDay(){
+		return day;
 	}
 	
-	void setSalary (double sal){
-		salary = sal;
+	void setDay (int d){
+		day = d;
+	}
+	
+	int getMonth(){
+		return month;
+	}
+	
+	void setMonth (int m){
+		month = m;
+	}
+	
+	int getYear (){
+		return year;
+	}
+	
+	void setYear (int y){
+		year = y;
+	}
+	
+	int getAge (){
+		return 2017 - year;
+	}
+	
+	int getMaxHeartRate (){
+		return 220 - getAge();
+	}
+	
+	int getTargetHeartRateA (){
+		return ((getMaxHeartRate()/100)*50);
+	}
+	
+	int getTargetHeartRateB (){
+		return ((getMaxHeartRate()/100)*85);
 	}
 }
 
-class Exercise3_13{
+class Exercise3_16{
 	public static void main (String [] args){
-		Employee employee1 = new Employee("John", "M", 500);
-		Employee employee2 = new Employee("Marry", "J", 300);
+		Scanner input = new Scanner(System.in);
 		
-		System.out.println("Employee\tMonthly Salary\tAnnual Salary");
-		System.out.println("1\t\t"+employee1.getSalary()+"\t\t"+employee1.getSalary()*12);
-		System.out.println("2\t\t"+employee2.getSalary()+"\t\t"+employee2.getSalary()*12);
+		System.out.print("First name : ");
+		String fName = input.next();
 		
-		System.out.println("Raising Salary by 10%...");
-		employee1.setSalary(((employee1.getSalary()/100)*10) + employee1.getSalary());
-		employee2.setSalary(((employee2.getSalary()/100)*10) + employee2.getSalary());
-		System.out.println("1\t\t"+employee1.getSalary()+"\t\t"+employee1.getSalary()*12);
-		System.out.println("2\t\t"+employee2.getSalary()+"\t\t"+employee2.getSalary()*12);
+		System.out.print("Last name : ");
+		String lName = input.next();
+		
+		System.out.print("Year of birth : ");
+		int year = input.nextInt();
+		
+		System.out.print("Day: ");
+		int day = input.nextInt();
+		
+		System.out.print("Month : ");
+		int month = input.nextInt();
+		
+		HeartRates heartRate = new HeartRates (fName, lName, day, month, year);
+		
+		System.out.println ("User name : "+heartRate.getFirstName()+" "+heartRate.getFirstName());
+		System.out.println ("Date of birth : "+heartRate.getDay()+"/"+heartRate.getMonth()+"/"+heartRate.getYear());
+		System.out.println ("\nAge = "+heartRate.getAge());
+		System.out.println ("Target heart rate = "+heartRate.getTargetHeartRateA()+" - "+heartRate.getTargetHeartRateB());
+		System.out.println ("Maximum heart rate = "+heartRate.getMaxHeartRate());
+		
 	}
 }
