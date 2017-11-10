@@ -19,11 +19,40 @@ class Date{
         this.day = day;
         this. year = year;
 
-        System.out.printf("Date object constructor for date %s%n", this);
+        //System.out.printf("Date object constructor for date %s%n", this);
+    }
+
+    public String getMonthName(int str){
+        String []months = 
+        { " ", "Jan", "Feb", "Mar", "April", "May", "June", "July", "August", "Sept", "Oct", "Nov", "Dec" };
+
+        return months[str];
+    }
+
+    public String getDayName(int str){
+        String []months = 
+        { " ", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", 
+        "Friday", "Sunday"};
+
+        if (str > 7)
+            str = str - 7;
+        else if (str > 14)
+            str = str - 14;
+        else if (str > 21)
+            str = str - 21;
+        else if (str > 28)
+            str = str - 28;
+        else
+            str = 0;
+
+        return months[1];
     }
 
     public String toString(){
-        return String.format("%d/%d/%d", month, day, year);
+        String ret = String.format("%d/%d/%d%n%s%s%s%n%s%s%s", month, day, year, 
+        this.getMonthName(month), " "+day+", ", year,
+        this.getDayName(day), " "+day+" "+this.getMonthName(month)+" ",year);
+        return ret;
     }
 
     public void nextDay(){
@@ -43,13 +72,10 @@ class Date{
     }
 }
 
-class Exercise8_8{
+class Exercise8_14{
     public static void main(String[] args) {
-        Date date = new Date (28,11,1999);
-
-        for (int i=0;i<=60;i++){
-            System.out.println(date.toString());
-            date.nextDay();
-        }
+        Date date = new Date(25,8,2017);
+        
+        System.out.println(date.toString());
     }
 }
