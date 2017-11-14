@@ -407,7 +407,7 @@ class Invoice implements Payable{
    } 
 } 
 
-class Exercise10_15 {
+class Exercise10_16 {
    public static void main(String[] args) {
          
       Date birth = new Date(7, 24, 1949);
@@ -432,16 +432,9 @@ class Exercise10_15 {
 
       for (Payable currentPayable : payableObjects){
          // output currentPayable and payment amount
-         if (currentPayable instanceof BasePlusCommissionEmployee){
-            System.out.printf("%n%s %n%s: $%,.2f%n", 
-            currentPayable.toString(), 
-            "payment due", (((currentPayable.getPaymentAmount())/100)*10)); 
-         }
-         else{
-            System.out.printf("%n%s %n%s: $%,.2f%n", 
+         System.out.printf("%n%s %n%s: $%,.2f%n", 
             currentPayable.toString(), 
             "payment due", currentPayable.getPaymentAmount()); 
-         }
       } 
    } 
 } 
