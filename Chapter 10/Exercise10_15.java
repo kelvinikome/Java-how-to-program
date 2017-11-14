@@ -42,8 +42,7 @@ class Date
    } 
 }
 
-abstract class Employee 
-{
+abstract class Employee implements Payable{
    private String firstName;
    private String lastName;
    private Date birthDate;
@@ -104,7 +103,6 @@ class HourlyEmployee extends Employee
       this.wage = wage;
    } 
 
-   // return wage
    public double getWage()
    {
       return wage;
@@ -132,7 +130,11 @@ class HourlyEmployee extends Employee
          return getWage() * getHours();                                
       else                                                             
          return 40 * getWage() + (getHours() - 40) * getWage() * 1.5;
-   }                                          
+   }  
+   
+   public double getPaymentAmount(){
+         return earnings();
+   }
 
    // return String representation of HourlyEmployee object              
    @Override                                                             
@@ -181,7 +183,10 @@ class SalariedEmployee extends Employee {
    {                                                                   
       return getWeeklySalary();                                        
    }                                             
-
+  
+   public double getPaymentAmount(){
+      return earnings();
+}
    // return String representation of SalariedEmployee object   
    @Override                                                    
    public String toString()                                     
@@ -191,8 +196,7 @@ class SalariedEmployee extends Employee {
    } 
 } 
 
-class CommissionEmployee extends Employee 
-{
+class CommissionEmployee extends Employee {
    private double grossSales; // gross weekly sales
    private double commissionRate; // commission percentage
 
@@ -250,7 +254,11 @@ class CommissionEmployee extends Employee
    public double earnings()                                            
    {                                                                   
       return getCommissionRate() * getGrossSales();                    
-   }                                             
+   }     
+   
+   public double getPaymentAmount(){
+         return earnings();
+   }
 
    // return String representation of CommissionEmployee object
    @Override                                                   
@@ -263,8 +271,7 @@ class CommissionEmployee extends Employee
    } 
 }
 
-class BasePlusCommissionEmployee extends CommissionEmployee 
-{
+class BasePlusCommissionEmployee extends CommissionEmployee {
    private double baseSalary; // base salary per week
 
    // constructor
@@ -313,73 +320,121 @@ class BasePlusCommissionEmployee extends CommissionEmployee
    } 
 } 
 
+interface Payable {    
+   double getPaymentAmount(); // calculate payment; no implementation
+}
+
+class Invoice implements Payable{
+   private final String partNumber; 
+   private final String partDescription;
+   private int quantity;
+   private double pricePerItem;
+
+   // constructor
+   public Invoice(String partNumber, String partDescription, int quantity,
+      double pricePerItem)
+   {
+      if (quantity < 0) // validate quantity
+         throw new IllegalArgumentException("Quantity must be >= 0");
+
+      if (pricePerItem < 0.0) // validate pricePerItem
+         throw new IllegalArgumentException(
+            "Price per item must be >= 0");
+
+      this.quantity = quantity;
+      this.partNumber = partNumber;
+      this.partDescription = partDescription;
+      this.pricePerItem = pricePerItem;
+   } // end constructor
+
+   // get part number
+   public String getPartNumber()
+   {
+      return partNumber; // should validate
+   } 
+
+   // get description
+   public String getPartDescription()
+   {
+      return partDescription;
+   } 
+
+   // set quantity
+   public void setQuantity(int quantity)
+   {
+      if (quantity < 0) // validate quantity
+         throw new IllegalArgumentException("Quantity must be >= 0");
+
+      this.quantity = quantity;
+   } 
+
+   // get quantity
+   public int getQuantity()
+   {
+      return quantity;
+   }
+
+   // set price per item
+   public void setPricePerItem(double pricePerItem)
+   {
+      if (pricePerItem < 0.0) // validate pricePerItem
+         throw new IllegalArgumentException(
+            "Price per item must be >= 0");
+
+      this.pricePerItem = pricePerItem;
+   } 
+
+   // get price per item
+   public double getPricePerItem()
+   {
+      return pricePerItem;
+   } 
+
+   // return String representation of Invoice object
+   @Override
+   public String toString()
+   {
+      return String.format("%s: %n%s: %s (%s) %n%s: %d %n%s: $%,.2f", 
+         "invoice", "part number", getPartNumber(), getPartDescription(), 
+         "quantity", getQuantity(), "price per item", getPricePerItem());
+   } 
+
+   // method required to carry out contract with interface Payable     
+   @Override                                                           
+   public double getPaymentAmount()                                    
+   {                                                                   
+      return getQuantity() * getPricePerItem(); // calculate total cost
+   } 
+} 
+
 class Exercise10_15 {
    public static void main(String[] args) {
          
       Date birth = new Date(7, 24, 1949);
       Date hire = new Date(3, 12, 2016);
 
-      SalariedEmployee salariedEmployee = 
+      Payable[] payableObjects = new Payable[6];
+      
+      payableObjects[0] = new Invoice("01234", "seat", 2, 375.00);
+      payableObjects[1] = new Invoice("56789", "tire", 4, 79.95);
+      payableObjects[2] = 
          new SalariedEmployee("John", "Smith", "111-11-1111", 200.0, birth, hire);
-      HourlyEmployee hourlyEmployee = 
+      payableObjects[3] = 
+         new SalariedEmployee("Lisa", "Barnes", "888-88-8888", 1200.00, birth, hire);
+      payableObjects[4] = 
          new HourlyEmployee("Karen", "Price", "222-22-2222", 200.0, 40.0, birth, hire);
-      CommissionEmployee commissionEmployee = 
+      payableObjects[5] = 
          new CommissionEmployee(
-         "Sue", "Jones", "333-33-3333", 10000, .06, birth, hire);
-      BasePlusCommissionEmployee basePlusCommissionEmployee = 
-         new BasePlusCommissionEmployee(
-         "Bob", "Lewis", "444-44-4444", 5000, .04, 300, birth, hire);
+            "Sue", "Jones", "333-33-3333", 10000, .06, birth, hire);
 
-      System.out.println("Employees processed individually:");
-      
-      System.out.printf("%n%s%n%s: $%,.2f%n%n", 
-         salariedEmployee, "earned", salariedEmployee.earnings());
-      System.out.printf("%s%n%s: $%,.2f%n%n",
-         hourlyEmployee, "earned", hourlyEmployee.earnings());
-      System.out.printf("%s%n%s: $%,.2f%n%n",
-         commissionEmployee, "earned", commissionEmployee.earnings());
-      System.out.printf("%s%n%s: $%,.2f%n%n", 
-         basePlusCommissionEmployee, 
-         "earned", basePlusCommissionEmployee.earnings());
+      System.out.println(
+         "Invoices and Employees processed polymorphically:"); 
 
-      // create four-element Employee array
-      Employee[] employees = new Employee[4]; 
-
-      // initialize array with Employees
-      employees[0] = salariedEmployee;
-      employees[1] = hourlyEmployee;
-      employees[2] = commissionEmployee; 
-      employees[3] = basePlusCommissionEmployee;
-
-      System.out.printf("Employees processed polymorphically:%n%n");
-      
-      // generically process each element in array employees
-      for (Employee currentEmployee : employees) 
-      {
-         System.out.println(currentEmployee); // invokes toString
-
-         // determine whether element is a BasePlusCommissionEmployee
-         if (currentEmployee instanceof BasePlusCommissionEmployee) 
-         {
-            // downcast Employee reference to 
-            // BasePlusCommissionEmployee reference
-            BasePlusCommissionEmployee employee = 
-               (BasePlusCommissionEmployee) currentEmployee;
-
-            employee.setBaseSalary(1.10 * employee.getBaseSalary());
-
-            System.out.printf(
-               "new base salary with 10%% increase is: $%,.2f%n",
-               employee.getBaseSalary());
-         } 
-
-         System.out.printf(
-            "earned $%,.2f%n%n", currentEmployee.earnings());
+      for (Payable currentPayable : payableObjects){
+         // output currentPayable and payment amount
+         System.out.printf("%n%s %n%s: $%,.2f%n", 
+            currentPayable.toString(), 
+            "payment due", currentPayable.getPaymentAmount()); 
       } 
-
-      // get type name of each object in employees array
-      for (int j = 0; j < employees.length; j++)
-         System.out.printf("Employee %d is a %s%n", j, 
-            employees[j].getClass().getName()); 
-   } // end main
+   } 
 } 
