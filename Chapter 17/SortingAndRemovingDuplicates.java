@@ -1,3 +1,9 @@
+/* Write a program that inserts 30 random letters
+into a List<Character> . Perform the following operations and display your results:
+a) Sort the List in ascending order.
+b) Sort the List in descending order.
+c) Display the List in ascending order with duplicates removed. */
+
 import java.security.SecureRandom;
 import java.util.*;
 
